@@ -5,14 +5,14 @@ var reactDomServer = require('react-dom/server');
 var Handlebars = require('handlebars');
 var fs = require('fs');
 var merge = require('lodash.merge');
+var path = require('path');
 require('babel-register')({
   presets: [ 'es2015', "react" ]
 });
 
-var basePageTemplateRaw = fs.readFileSync('./base-page-template.handlebars', {encoding: 'utf8'});
-var basePageTemplate = Handlebars.compile(basePageTemplateRaw);
+var defaultTemplateName = '/base-page-template.handlebars';
 
-function StartStatic(options) {
+function StartStatic(options, templatePath) {
   var entrys = [];
 
   options.viewName = undefined;
@@ -26,9 +26,17 @@ function StartStatic(options) {
           var entryKeys = Object.keys(compilation.options.entry);
           var key;
           var templateOptions;
+          var basePageTemplatePath = templatePath ?
+            path.join(compiler.context, templatePath) : path.join(__dirname, defaultTemplateName)
+          var basePageTemplateRaw = fs.readFileSync(basePageTemplatePath, {
+            encoding: 'utf8'
+          });
+          var basePageTemplate = Handlebars.compile(basePageTemplateRaw);
 
           for(var iterator in compilation.options.entry) {
-            component = require(compilation.options.entry[iterator]);
+            component = require(
+              path.join(compiler.context, compilation.options.entry[iterator])
+            );
             entrys.push(reactDomServer.renderToString(react.createFactory(
               component[Object.keys(component)[0]]
             )(), {}));
@@ -42,7 +50,11 @@ function StartStatic(options) {
               body: source
             });
             compilation.assets[key + '.html'] = {
-              source: function(){return basePageTemplate(merge(options.default || {}, templateOptions))},
+              source: function(){
+                return basePageTemplate(
+                  merge(options.default || {}, templateOptions)
+                );
+              },
               size: function() {return source.length}
             }
           });

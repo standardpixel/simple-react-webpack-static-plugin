@@ -12,7 +12,7 @@ require('babel-register')({
 
 var defaultTemplateName = '/base-page-template.handlebars';
 
-function StartStatic(options, templatePath) {
+function SimpleReactWebpackStaticPlugin(options, templatePath) {
   var entrys = [];
 
   options.viewName = undefined;
@@ -67,4 +67,4 @@ function StartStatic(options, templatePath) {
   };
 }
 
-module.exports = StartStatic;
+module.exports = SimpleReactWebpackStaticPlugin;

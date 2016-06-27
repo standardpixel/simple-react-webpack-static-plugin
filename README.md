@@ -1,4 +1,7 @@
 # simple-react-webpack-static-plugin
+
+[![Build Status](https://travis-ci.org/standardpixel/simple-react-webpack-static-plugin.svg?branch=master)](https://travis-ci.org/standardpixel/simple-react-webpack-static-plugin)
+
  This Webpack plug-in does one thing really well. When pluged in to a webpack config with one or more JSX entry-points, it will generate a static HTML file for each of those entry-points. This is so that your site will have static content for any reason you might like to have that.
 
 ## Example Usage

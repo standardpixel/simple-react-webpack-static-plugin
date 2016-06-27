@@ -9,65 +9,74 @@ var path = require('path');
 require('babel-register')({
   presets: [ 'es2015', "react" ]
 });
-require.extensions['.scss'] = () => { return; };
-require.extensions['.css'] = () => { return; };
-require.extensions['.png'] = () => { return; };
 
-var defaultTemplateName = '/base-page-template.handlebars';
+const defaultTemplateName = '/base-page-template.handlebars';
 
-function SimpleReactWebpackStaticPlugin(options, templatePath) {
-  var entrys = [];
+class SimpleReactWebpackStaticPlugin {
 
-  options.viewName = undefined;
-  options.body = undefined;
+  constructor(pages, options) {
 
-  return {
-    apply: function(compiler) {
-        compiler.plugin("emit", function(compilation, callback) {
+    pages.viewName = undefined;
+    pages.body = undefined;
 
-          var component;
-          var entryKeys = Object.keys(compilation.options.entry);
-          var key;
-          var templateOptions;
-          var basePageTemplatePath = templatePath ?
-            path.join(compiler.context, templatePath) : path.join(__dirname, defaultTemplateName)
-          var basePageTemplateRaw = fs.readFileSync(basePageTemplatePath, {
-            encoding: 'utf8'
-          });
-          var basePageTemplate = Handlebars.compile(basePageTemplateRaw);
-
-          for(var iterator in compilation.options.entry) {
-            component = require(
-              path.join(compiler.context, compilation.options.entry[iterator])
-            );
-            entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
-              component[Object.keys(component)[0]]
-            )(), {}));
-          }
-
-          entrys.forEach(function(source, iterator) {
-            key = entryKeys[iterator];
-            templateOptions = merge(options[key] || {});
-            templateOptions = merge(templateOptions, {
-              viewName: key,
-              body: source
-            });
-            compilation.assets[key + '.html'] = {
-              source: function(){
-                return basePageTemplate(
-                  merge(options.default || {}, templateOptions)
-                );
-              },
-              size: function() {return source.length}
-            }
-          });
-
-          entrys = [];
-
-          callback();
-        });
+    // Some file extensions should noop instead of trying to run
+    // as javascript.
+    if (typeof options["ignore-extensions"] && options["ignore-extensions"].length) {
+      for(let extension of options["ignore-extensions"]) {
+        require.extensions[`.${extension}`] = () => { return; };
       }
-  };
+    }
+
+    this.options = options;
+    this.pages = pages;
+    this.entrys = [];
+
+  }
+
+  apply(compiler) {
+    compiler.plugin("emit", (compilation, done) => {
+      let component;
+      let entryKeys = Object.keys(compilation.options.entry);
+      let key;
+      let templateOptions;
+      let basePageTemplatePath = this.options.template ?
+        path.join(compiler.context, this.options.template) : path.join(__dirname, defaultTemplateName)
+      let basePageTemplateRaw = fs.readFileSync(basePageTemplatePath, {
+        encoding: 'utf8'
+      });
+      var basePageTemplate = Handlebars.compile(basePageTemplateRaw);
+
+      for(let iterator in compilation.options.entry) {
+        component = require(
+          path.join(compiler.context, compilation.options.entry[iterator])
+        );
+        this.entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
+          component[Object.keys(component)[0]]
+        )(), {}));
+      }
+
+      this.entrys.forEach((source, iterator) => {
+        key = entryKeys[iterator];
+        templateOptions = merge(this.pages[key] || {});
+        templateOptions = merge(templateOptions, {
+          viewName: key,
+          body: source
+        });
+        compilation.assets[key + '.html'] = {
+          source: () => {
+            return basePageTemplate(
+              merge(this.pages.default || {}, templateOptions)
+            );
+          },
+          size: () => {return source.length}
+        }
+      });
+
+      this.entrys = [];
+
+      done();
+    });
+  }
 }
 
 module.exports = SimpleReactWebpackStaticPlugin;

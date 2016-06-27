@@ -1,7 +1,7 @@
 {
   "name": "simple-react-webpack-static-plugin",
   "version": "1.0.0",
-  "description": "A Webpack plugin which takes entry-point jsx files and generates static html pages they can load into",
+  "description": "This Webpack plug-in does one thing really well. When pluged in to a webpack config with one or more JSX entry-points, it will generate a static HTML file for each of those entry-points. This is so that your site will have static content for any reason you might like to have that.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

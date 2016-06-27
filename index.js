@@ -41,7 +41,7 @@ class SimpleReactWebpackStaticPlugin {
     }
 
     //Set properties
-    this.name = ${pluginName}
+    this.name = pluginName
     this.options = options;
     this.pages = pages;
     this.entrys = [];

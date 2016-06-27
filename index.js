@@ -11,6 +11,7 @@ require('babel-register')({
 });
 
 const defaultTemplateName = '/base-page-template.handlebars';
+const pluginName = 'SimpleReactWebpackStaticPlugin';
 
 class SimpleReactWebpackStaticPlugin {
 
@@ -18,13 +19,13 @@ class SimpleReactWebpackStaticPlugin {
 
     // Assert required stuff
     if(!pages) {
-      throw new Error("WebpackStaticReact requires the first argument be an object with template content");
+      throw new Error(`${pluginName} requires the first argument be an object with template content`);
     }
     if(!pages.default) {
-      throw new Error("WebpackStaticReact requires the first argument be an object with template content");
+      throw new Error(`${pluginName} requires the first argument be an object with template content`);
     }
     if(!pages.default.title) {
-      throw new Error("The default template config requires a title attribute");
+      throw new Error(`${pluginName} requires the default template config requires a title attribute`);
     }
 
     // Defaults for optional stuff
@@ -40,7 +41,7 @@ class SimpleReactWebpackStaticPlugin {
     }
 
     //Set properties
-    this.name = "WebpackStaticReact"
+    this.name = ${pluginName}
     this.options = options;
     this.pages = pages;
     this.entrys = [];

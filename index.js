@@ -9,6 +9,9 @@ var path = require('path');
 require('babel-register')({
   presets: [ 'es2015', "react" ]
 });
+require.extensions['.scss'] = () => { return; };
+require.extensions['.css'] = () => { return; };
+require.extensions['.png'] = () => { return; };
 
 var defaultTemplateName = '/base-page-template.handlebars';
 
@@ -37,7 +40,7 @@ function SimpleReactWebpackStaticPlugin(options, templatePath) {
             component = require(
               path.join(compiler.context, compilation.options.entry[iterator])
             );
-            entrys.push(reactDomServer.renderToString(react.createFactory(
+            entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
               component[Object.keys(component)[0]]
             )(), {}));
           }

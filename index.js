@@ -16,17 +16,31 @@ class SimpleReactWebpackStaticPlugin {
 
   constructor(pages, options) {
 
+    // Assert required stuff
+    if(!pages) {
+      throw new Error("WebpackStaticReact requires the first argument be an object with template content");
+    }
+    if(!pages.default) {
+      throw new Error("WebpackStaticReact requires the first argument be an object with template content");
+    }
+    if(!pages.default.title) {
+      throw new Error("The default template config requires a title attribute");
+    }
+
+    // Defaults for optional stuff
     pages.viewName = undefined;
     pages.body = undefined;
+    options = options || {};
+    options["ignore-extensions"] = [];
 
     // Some file extensions should noop instead of trying to run
     // as javascript.
-    if (typeof options["ignore-extensions"] && options["ignore-extensions"].length) {
-      for(let extension of options["ignore-extensions"]) {
-        require.extensions[`.${extension}`] = () => { return; };
-      }
+    for(let extension of options["ignore-extensions"]) {
+      require.extensions[`.${extension}`] = () => { return; };
     }
 
+    //Set properties
+    this.name = "WebpackStaticReact"
     this.options = options;
     this.pages = pages;
     this.entrys = [];

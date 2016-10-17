@@ -32,4 +32,4 @@ module.exports = {
         * **title** (string) _Required for default template_ [Page title]
   * **options** (object) _Optional_
     **template** (string) _Optional_ [An override mustache template]
-    **ingnore-extras** (array) _Optional_ [File extensions for NodeJs to ignore when reading your modules. This is useful if you are using webpack loaders to load non-javascript files]
+    **ignore-extensions** (array) _Optional_ [File extensions for NodeJs to ignore when reading your modules. This is useful if you are using webpack loaders to load non-javascript files]

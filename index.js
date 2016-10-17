@@ -32,11 +32,11 @@ class SimpleReactWebpackStaticPlugin {
     pages.viewName = undefined;
     pages.body = undefined;
     options = options || {};
-    options["ignore-extensions"] = options["ignore-extensions"] || [];
+    let _ignoreExtensions = options["ignore-extensions"] || [];
 
     // Some file extensions should noop instead of trying to run
     // as javascript.
-    for(let extension of options["ignore-extensions"]) {
+    for(let extension of _ignoreExtensions) {
       require.extensions[`.${extension}`] = () => { return; };
     }
 

@@ -2,7 +2,7 @@
 
 var react = require('react');
 var reactDomServer = require('react-dom/server');
-var Handlebars = require('handlebars');
+var basePageTemplate = require("./base-page-template");
 var fs = require('fs');
 var merge = require('lodash.merge');
 var path = require('path');
@@ -10,7 +10,6 @@ require('babel-register')({
   presets: [ 'es2015', "react" ]
 });
 
-const defaultTemplateName = '/base-page-template.handlebars';
 const pluginName = 'SimpleReactWebpackStaticPlugin';
 
 class SimpleReactWebpackStaticPlugin {

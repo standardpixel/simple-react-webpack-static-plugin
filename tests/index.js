@@ -1,7 +1,7 @@
 import test from 'ava';
 import SimpleReactWebpackStaticPlugin from '../index.js';
 
-test('initializing with defualts', t => {
+test('initializing with defaults', t => {
   let instance = new SimpleReactWebpackStaticPlugin({
     "default": {"title": "I am a title"}
   });

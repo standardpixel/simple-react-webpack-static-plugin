@@ -53,12 +53,7 @@ class SimpleReactWebpackStaticPlugin {
       let entryKeys = Object.keys(compilation.options.entry);
       let key;
       let templateOptions;
-      let basePageTemplatePath = this.options.template ?
-        path.join(compiler.context, this.options.template) : path.join(__dirname, defaultTemplateName)
-      let basePageTemplateRaw = fs.readFileSync(basePageTemplatePath, {
-        encoding: 'utf8'
-      });
-      var basePageTemplate = Handlebars.compile(basePageTemplateRaw);
+      let pageTemplate = this.options.template || basePageTemplate;
 
       for(let iterator in compilation.options.entry) {
         component = require(
@@ -78,7 +73,7 @@ class SimpleReactWebpackStaticPlugin {
         });
         compilation.assets[key + '.html'] = {
           source: () => {
-            return basePageTemplate(
+            return pageTemplate(
               merge(this.pages.default || {}, templateOptions)
             );
           },

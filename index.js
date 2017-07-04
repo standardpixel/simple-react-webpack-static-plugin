@@ -57,7 +57,7 @@ class SimpleReactWebpackStaticPlugin {
 
       for(let iterator in compilation.options.entry) {
         component = require(
-          path.join(compiler.context, compilation.options.entry[iterator])
+          path.join(compiler.context || "", compilation.options.entry[iterator])
         );
         this.entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
           component[Object.keys(component)[0]]

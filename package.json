@@ -15,11 +15,13 @@
   "author": "info@standardpixel.com",
   "license": "ISC",
   "ava": {
-    "babel": {
-      "presets": [
-        "es2015"
-      ]
-    }
+    "files": [
+      "test/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   },
   "bugs": {
     "url": "https://github.com/standardpixel/simple-react-webpack-static-plugin/issues"

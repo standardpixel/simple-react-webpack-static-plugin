@@ -28,8 +28,8 @@ module.exports = {
 ## Interface
   * SimpleReactWebpackStaticPlugin Arguments
     * **pages** (object) _Required_ [Configuration for page templates, contains keys matching the names of each entry point in your webpack config and a default]
-      * **default** (object) _Required_ [Mustache template variables]
+      * **default** (object) _Required_ [Template variables]
         * **title** (string) _Required for default template_ [Page title]
   * **options** (object) _Optional_
-    **template** (string) _Optional_ [An override mustache template]
+    **template** (string) _Optional_ [An override function which returns a template sting]
     **ignore-extensions** (array) _Optional_ [File extensions for NodeJs to ignore when reading your modules. This is useful if you are using webpack loaders to load non-javascript files]

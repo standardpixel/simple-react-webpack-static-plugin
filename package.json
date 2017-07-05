@@ -1,6 +1,6 @@
 {
   "name": "simple-react-webpack-static-plugin",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "This plugin creates an HTML file with static markup from each JSX entry-point in a webpack config. It expects you have written your application to use ES-2015.",
   "main": "index.js",
   "scripts": {

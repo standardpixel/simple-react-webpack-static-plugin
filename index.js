@@ -66,15 +66,13 @@ class SimpleReactWebpackStaticPlugin {
 
       this.entrys.forEach((source, iterator) => {
         key = entryKeys[iterator];
-        templateOptions = merge(this.pages[key] || {});
-        templateOptions = merge(templateOptions, {
-          viewName: key,
-          body: source
-        });
         compilation.assets[key + '.html'] = {
           source: () => {
             return pageTemplate(
-              merge(this.pages.default || {}, templateOptions)
+              merge(this.pages.default || this.pages[key] || {}, merge(templateOptions, {
+                viewName: key,
+                body: source
+              }))
             );
           },
           size: () => {return source.length}

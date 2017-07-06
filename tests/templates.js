@@ -12,7 +12,7 @@ test('generates one file per entry', t => {
   let webpackOptions = {
     entry: {
       index: __dirname + "/helpers/react-component.jsx",
-      about: __dirname + "/helpers/react-component.jsx"
+      about: __dirname + "/helpers/react-component2.jsx"
     }
   };
 
@@ -83,6 +83,32 @@ test('custom templates can be set', t => {
       compilation.assets["index.html"].source(), //actual
       "Custom string", // Expected
       "The custom template output generated does not match the expected output if the index entry point"
+    );
+  });
+
+});
+
+test('Asset values are not the same when populated from different entires', t => {
+
+  let webpackOptions = {
+    entry: {
+      index: __dirname + "/helpers/react-component.jsx",
+      about: __dirname + "/helpers/react-component2.jsx"
+    }
+  };
+
+  let compilation = {
+    options: webpackOptions,
+    assets: {}
+  };
+
+  let pluginContext = new applyPluginWithOptions(SimpleReactWebpackStaticPlugin, templateOptions);
+
+  pluginContext[0].handler(compilation, done => {
+    t.not(
+      compilation.assets["index.html"].source(),
+      compilation.assets["about.html"].source(),
+      "Both files are the same"
     );
   });
 

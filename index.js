@@ -57,7 +57,7 @@ class SimpleReactWebpackStaticPlugin {
 
       for(let iterator in compilation.options.entry) {
         component = require(
-          path.join(compiler.context || "", compilation.options.entry[iterator])
+          path.join(compiler.context || "./", compilation.options.entry[iterator])
         );
         this.entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
           component[Object.keys(component)[0]]
@@ -65,12 +65,11 @@ class SimpleReactWebpackStaticPlugin {
       }
 
       this.entrys.forEach((source, iterator) => {
-        key = entryKeys[iterator];
         compilation.assets[key + '.html'] = {
           source: () => {
             return pageTemplate(
               merge(this.pages.default || this.pages[key] || {}, merge(templateOptions, {
-                viewName: key,
+                viewName: entryKeys[iterator],
                 body: source
               }))
             );

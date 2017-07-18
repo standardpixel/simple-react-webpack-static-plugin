@@ -27,10 +27,16 @@
     "url": "https://github.com/standardpixel/simple-react-webpack-static-plugin/issues"
   },
   "dependencies": {
+    "ava": "^0.21.0",
+    "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.8.0",
+    "babel-register": "^6.24.1",
+    "caniuse-lite": "^1.0.30000700",
     "lodash.merge": "^4.3.5",
+    "postcss": "^6.0.6",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-import": "^10.0.0",
     "react": "^15.0.2",
     "react-dom": "^15.0.2"
   },
@@ -39,6 +45,7 @@
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
     "esutils": "^2.0.2",
+    "postcss-loader": "^2.0.6",
     "regexpu-core": "^4.1.1",
     "webpack": "^1.13.1"
   }

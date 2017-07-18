@@ -43,7 +43,7 @@ class SimpleReactWebpackStaticPlugin {
     this.name = pluginName
     this.options = options;
     this.pages = pages;
-    this.entrys = [];
+    this.entries = {};
 
   }
 
@@ -57,16 +57,18 @@ class SimpleReactWebpackStaticPlugin {
 
       for(let iterator in compilation.options.entry) {
         component = require(
-          path.join(compiler.context || "./", compilation.options.entry[iterator])
+          path.join(compiler.context || "./", compilation.options.entry[iterator][1])
         );
-        this.entrys.push(reactDomServer.renderToStaticMarkup(react.createFactory(
+        this.entries[iterator] = reactDomServer.renderToStaticMarkup(react.createFactory(
           component[Object.keys(component)[0]]
-        )(), {}));
+        )(), {});
       }
 
-      this.entrys.forEach((source, iterator) => {
+      Object.keys(this.entries).forEach((key, iterator) => {
+        let source  = this.entries[key];
         compilation.assets[key + '.html'] = {
           source: () => {
+            console.log("pageTemplate", source);
             return pageTemplate(
               merge(this.pages.default || this.pages[key] || {}, merge(templateOptions, {
                 viewName: entryKeys[iterator],
@@ -78,7 +80,7 @@ class SimpleReactWebpackStaticPlugin {
         }
       });
 
-      this.entrys = [];
+      this.entries = [];
 
       done();
     });

@@ -2,18 +2,21 @@ import test from 'ava';
 import {applyPluginWithOptions} from './helpers/apply-plugin-with-options';
 import baseTemplate from '../base-page-template';
 import SimpleReactWebpackStaticPlugin from '../index.js';
+import path from "path";
 
 const templateOptions = {
   "default": {"title": "I am a title"}
 };
 
+const paths = {
+  index: path.join(__dirname, "/helpers/react-component.jsx"),
+  about: path.join(__dirname, "/helpers/react-component2.jsx")
+};
+
 test('generates one file per entry', t => {
 
   let webpackOptions = {
-    entry: {
-      index: __dirname + "/helpers/react-component.jsx",
-      about: __dirname + "/helpers/react-component2.jsx"
-    }
+    entry: paths
   };
 
   let compilation = {
@@ -37,7 +40,7 @@ test('loads default template when a custom one is not configured', t => {
 
   let webpackOptions = {
     entry: {
-      index: __dirname + "/helpers/react-component.jsx"
+      index: paths.index
     }
   };
 
@@ -65,7 +68,7 @@ test('custom templates can be set', t => {
 
   let webpackOptions = {
     entry: {
-      index: __dirname + "/helpers/react-component.jsx"
+      index: paths.index
     }
   };
 
@@ -91,10 +94,7 @@ test('custom templates can be set', t => {
 test('Asset values are not the same when populated from different entires', t => {
 
   let webpackOptions = {
-    entry: {
-      index: __dirname + "/helpers/react-component.jsx",
-      about: __dirname + "/helpers/react-component2.jsx"
-    }
+    entry: paths
   };
 
   let compilation = {

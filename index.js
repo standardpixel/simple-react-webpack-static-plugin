@@ -12,6 +12,12 @@ require('babel-register')({
 
 const pluginName = 'SimpleReactWebpackStaticPlugin';
 
+function getObjectValues(object) {
+  return Object.keys(object).map(key => {
+    return object[key];
+  });
+}
+
 class SimpleReactWebpackStaticPlugin {
 
   constructor(pages, options) {
@@ -56,9 +62,9 @@ class SimpleReactWebpackStaticPlugin {
       let pageTemplate = this.options.template || basePageTemplate;
 
       for(let iterator in compilation.options.entry) {
-        component = require(
-          path.join(compiler.context || "./", compilation.options.entry[iterator][1])
-        );
+        let pathValue = compilation.options.entry[iterator];
+        let stringPathValue = Array.isArray(pathValue) ? pathValue[1] : pathValue;
+        component = require(compiler.context + stringPathValue.substring(1));
         this.entries[iterator] = reactDomServer.renderToStaticMarkup(react.createFactory(
           component[Object.keys(component)[0]]
         )(), {});
@@ -68,7 +74,6 @@ class SimpleReactWebpackStaticPlugin {
         let source  = this.entries[key];
         compilation.assets[key + '.html'] = {
           source: () => {
-            console.log("pageTemplate", source);
             return pageTemplate(
               merge(this.pages.default || this.pages[key] || {}, merge(templateOptions, {
                 viewName: entryKeys[iterator],
@@ -79,6 +84,32 @@ class SimpleReactWebpackStaticPlugin {
           size: () => {return source.length}
         }
       });
+
+      if (this.options.directories) {
+        let newMembers = {};
+
+        for (let index in compilation.assets) {
+          let name = index.substring(0, index.length-5);
+          if (name !== "index") {
+            if (index.substring(name.length) === ".html") {
+              newMembers[name] = `${name}/index.html`;
+              compilation.assets[newMembers[name]] = compilation.assets[index];
+              delete compilation.assets[index];
+            }
+          }
+        }
+
+        for (let index in compilation.assets) {
+          if (getObjectValues(newMembers).indexOf(index) === -1) {
+            Object.keys(newMembers).forEach(function(item) {
+              if (index.substring(0, item.length) === item && index.substring(item.length, item.length+1) === ".") {
+                compilation.assets[`${item}/${index}`] = compilation.assets[index];
+                delete compilation.assets[index];
+              }
+            });
+          }
+        }
+      }
 
       this.entries = [];
 
